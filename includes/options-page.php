@@ -16,6 +16,11 @@ function load_carbon_fields()
       \Carbon_Fields\Carbon_Fields::boot();
 }
 
+/**
+ * :: 用于访问类的静态成员和常量。
+ * -> 用于访问对象的实例成员。
+ */
+
 function create_options_page()
 {
       Container::make('theme_options', __('Contact Form'))
