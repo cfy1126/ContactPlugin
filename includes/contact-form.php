@@ -148,10 +148,21 @@ function create_submissions_page()
 
       // Create the submissions post type to store form submissions
 
+
+      // **public**：设置为 true，表示此自定义文章类型是公开的。
+      // **has_archive**：设置为 true，表示此自定义文章类型有存档页面。
+      // **menu_position**：设置为 30，表示此自定义文章类型在管理菜单中的位置。
+      // **publicly_queryable**：设置为 false，表示此自定义文章类型不能通过 URL 直接访问。
+      // **labels**：定义了此自定义文章类型在管理界面中的显示标签。
+      // **supports**：设置为 false，表示此自定义文章类型不支持任何功能。
+      // **capability_type**：设置为 'post'，表示使用与文章相同的权限。
+      // **capabilities**：定义了具体的权限，create_posts 设置为 false，表示不允许创建新文章。
+      // **map_meta_cap**：设置为 true，表示使用默认的权限映射。
+
       $args = [
 
             'public' => true,
-            'has_archive' => true,
+            'has_archive' => false,
             'menu_position' => 30,
             'publicly_queryable' => false,
             'labels' => [
