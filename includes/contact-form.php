@@ -33,6 +33,7 @@ function setup_search()
 
       // Only apply filter to submissions page
 
+      // typenow 是 WordPress 中的一个全局变量。它用于存储当前正在编辑或查看的文章类型（post type）的标识符
       global $typenow;
 
       if ($typenow === 'submission') {
@@ -51,11 +52,14 @@ function submission_search_override($search, $query)
             $sql    = "
               or exists (
                   select * from {$wpdb->postmeta} where post_id={$wpdb->posts}.ID
-                  and meta_key in ('name','email','phone')
+                  and meta_key in ('name','email','phone','message')
                   and meta_value like %s
               )
           ";
+            // esc_like() 函数用于对字符串进行转义，以便在 SQL 查询的 LIKE 子句中安全地使用。通过转义 % 和 _ 等特殊字符，可以防止 SQL 注入攻击，确保查询的安全性。  
             $like   = '%' . $wpdb->esc_like($query->query['s']) . '%';
+            
+            // 使用正则表达式 preg_replace 修改原始搜索查询，将自定义的 SQL 子查询插入到搜索条件中。
             $search = preg_replace(
                   "#\({$wpdb->posts}.post_title LIKE [^)]+\)\K#",
                   $wpdb->prepare($sql, $like),
@@ -94,6 +98,10 @@ function custom_submission_columns($columns)
 {
       // Edit the columns for the submission table
 
+      // __() 函数用于获取翻译后的字符串。
+      // 'contact-plugin' 是一个文本域，用于将这些字符串与 contact-plugin 插件的翻译文件关联起来，以便在不同语言环境下显示正确的翻译。
+      // 对应插件定义 Text Domain: contact-plugin
+
       $columns = array(
 
             'cb' => $columns['cb'],
@@ -108,6 +116,10 @@ function custom_submission_columns($columns)
       return $columns;
 }
 
+// **'custom_contact_form'**：元框的 ID。
+// **'Submission'**：元框的标题。
+// **'display_submission'**：回调函数，用于显示元框内容。
+// **'submission'**：自定义文章类型的标识符，表示元框将显示在 'submission' 类型的文章编辑页面上。
 function create_meta_box()
 {
       // Create custom meta box to display submission
@@ -131,6 +143,10 @@ function display_submission()
       // }
 
       // echo '</ul>';
+
+      // **esc_html**：用于转义 HTML 标签，防止 XSS 攻击。
+      // 输入：'<script>alert("XSS Attack!");</script>'
+      // 输出：&lt;script&gt;alert(&quot;XSS Attack!&quot;);&lt;/script&gt;
 
 
       echo '<ul>';
